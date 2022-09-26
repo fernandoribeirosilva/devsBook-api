@@ -66,12 +66,6 @@ class PostRepository {
         created_at: true,
         like_cont: true,
         user_id: true,
-        post_like: {
-          select: {
-            id: true,
-            liked: true,
-          },
-        },
         post_comment: {
           select: {
             id: true,
