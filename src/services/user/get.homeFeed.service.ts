@@ -1,4 +1,5 @@
 import 'dotenv/config';
+import { LikeRepository } from '../../repositories/like.repository';
 import PostRepository from "../../repositories/post.repository";
 import UserRepository from "../../repositories/user.repository";
 import { Post } from "../../types/Post";
@@ -30,20 +31,22 @@ class GetHomeFeedService {
     const post: Post[] = [];
 
     if (postList) {
-      postList.forEach((data) => {
+      postList.forEach(async (dataPost) => {
+        let liked = await LikeRepository.postLike(dataPost.id, id_user);
+
         post.push({
-          id: data.id,
-          type: data.type,
-          body: data.body,
-          created_at: data.created_at,
-          like_cont: data.like_cont,
-          mine: data.user_id === id_user ?? false,
-          like: data.post_like,
-          comment: data.post_comment,
+          id: dataPost.id,
+          type: dataPost.type,
+          body: dataPost.body,
+          created_at: dataPost.created_at,
+          like_cont: dataPost.like_cont,
+          liked,
+          mine: dataPost.user_id === id_user ?? false,
+          comment: dataPost.post_comment,
           user: {
-            id: data.user?.id,
-            name: data.user?.name,
-            avatar: `${process.env.BASE_URL}/media/avatars/${data.user?.avatar}`,
+            id: dataPost.user?.id,
+            name: dataPost.user?.name,
+            avatar: `${process.env.BASE_URL}/media/avatars/${dataPost.user?.avatar}`,
           },
         });
       });
@@ -61,7 +64,7 @@ class GetHomeFeedService {
       post,
       pageCount: pageCount,
       currentPage: page,
-    } 
+    }
   }
 }
 

@@ -1,6 +1,7 @@
 import "dotenv/config";
 import { calculateAgeYears } from "../../helpers/calculate.ageYears";
 import { FormatDate } from "../../helpers/format.date";
+import { LikeRepository } from "../../repositories/like.repository";
 import PostRepository from "../../repositories/post.repository";
 import UserRepository from "../../repositories/user.repository";
 import { Feed, Followers, Following, Photo } from "../../types/Feed";
@@ -46,9 +47,9 @@ class GetFeed {
       );
 
       const posts: Post[] = [];
-      
+
       if (dataFeedUser) {
-        dataFeedUser.map((data) => {
+        dataFeedUser.map(async (data) => {
           let body: string;
 
           if (data.type === "text") {
@@ -57,26 +58,17 @@ class GetFeed {
             body = `${process.env.BASE_URL}/media/photo/${data.body}`;
           }
 
+          let liked = await LikeRepository.postLike(data.id, loggedUser);
+
           posts.push({
             id: data.id,
             type: data.type,
             body,
             mine: data.user_id === loggedUser ?? false,
             like_cont: data.like_cont,
+            liked,
             created_at: data.created_at,
-            like: data.post_like.map((like) => {
-              return {
-                id: like.id,
-                liked: like.liked,
-              };
-            }),
-            comment: data.post_comment.map((comment) => {
-              return {
-                id: comment.id,
-                body: comment.body,
-                created_at: comment.created_at,
-              };
-            }),
+            comment: data.post_comment
           });
         });
       }
