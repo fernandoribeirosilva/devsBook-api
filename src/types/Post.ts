@@ -1,5 +1,6 @@
+import { post_like } from "@prisma/client";
+
 type Like = {
-  id: number;
   liked: boolean;
 };
 
@@ -20,9 +21,9 @@ export type Post = {
   type: string;
   body: string;
   like_cont: number;
+  liked: boolean;
   created_at: string | Date;
   mine: boolean;
-  like: Like[];
   comment: Comment[];
   user?: User;
 };
