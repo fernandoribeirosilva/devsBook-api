@@ -9,14 +9,9 @@ import { PostController } from "./controller/post.controller";
 import { ProfileController } from "./controller/profile.controller";
 import { SearchController } from "./controller/SearchController";
 import { UserController } from "./controller/user.controller";
+import { LikeController } from "./controller/like.controller";
 
 const router = Router();
-
-// const userController = new UserController();
-// const loginController = new LoginController();
-// const homeController = new HomeController();
-// const postController = new PostController();
-// const profileController = new ProfileController();
 
 router.get("/", Auth.private, new HomeController().index);
 
@@ -37,6 +32,8 @@ router.get("/perfil", Auth.private, new ProfileController().index);
 router.get("/photos", Auth.private, new ProfileController().photos);
 
 router.get("/pesquisa", Auth.private, new SearchController().search);
+
+router.post('/post/:id/like', Auth.private, new PostController().like);
 
 router.post(
   "/config",
