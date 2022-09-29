@@ -1,3 +1,4 @@
+import 'dotenv/config'
 import { Request, Response } from "express";
 import { FollowService } from "../services/user/follow.service";
 import { GetFeed } from "../services/user/get.feed.service";
@@ -18,10 +19,14 @@ class ProfileController {
       const dataFeed = await GetFeed.execute(idUser, true, skip, loggedUser.id);
 
       res.status(200).json({
-        data: {
-          loggedUser: loggedUser,
-          feedUser: dataFeed,
+        loggedUser: {
+          id: loggedUser.id,
+          name: loggedUser.name,
+          email: loggedUser.email,
+          avatar: `${process.env.BASE_URL}/media/avatars/${loggedUser.avatar}`,
+          cover: `${process.env.BASE_URL}/media/covers/${loggedUser.cover}`,
         },
+        feedUser: dataFeed,
       });
       return;
     } catch (error: InstanceType<Error>) {
@@ -51,8 +56,8 @@ class ProfileController {
         ? parseInt(req.params.id)
         : loggedUser.id;
 
-      const data = await FriendsService.getFriends(idUser, loggedUser.id);
-      res.status(200).json({ data });
+      const feed = await FriendsService.getFriends(idUser, loggedUser.id);
+      res.status(200).json({ feed });
       return;
     } catch (error: InstanceType<Error>) {
       res.status(400).json({ error: error.message });

@@ -9,7 +9,6 @@ import { PostController } from "./controller/post.controller";
 import { ProfileController } from "./controller/profile.controller";
 import { SearchController } from "./controller/SearchController";
 import { UserController } from "./controller/user.controller";
-import { LikeController } from "./controller/like.controller";
 
 const router = Router();
 

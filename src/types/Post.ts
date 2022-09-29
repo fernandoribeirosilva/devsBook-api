@@ -8,13 +8,15 @@ type Comment = {
   id: number;
   body: string;
   created_at: string | Date;
+  user?: User
 };
 
 type User = {
-  id: number | undefined;
+  id?: number | undefined;
   name: string | undefined;
   avatar: string | undefined;
 };
+
 
 export type Post = {
   id: number;

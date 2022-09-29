@@ -52,13 +52,6 @@ class PostRepository {
 
   async getHomeFeed(userList: number[], page: number, perPage: number) {
     return await prisma.post.findMany({
-      skip: page, // vai pular ate a pagina
-      take: perPage, // vai mostrar o tanto de posts que foi passado para perPage
-      where: {
-        user_id: {
-          in: userList,
-        },
-      },
       select: {
         id: true,
         type: true,
@@ -71,6 +64,12 @@ class PostRepository {
             id: true,
             body: true,
             created_at: true,
+            user: {
+              select: {
+                avatar: true,
+                name: true,
+              }
+            }
           },
         },
         user: {
@@ -81,6 +80,13 @@ class PostRepository {
           },
         },
       },
+      where: {
+        user_id: {
+          in: userList,
+        },
+      },
+      skip: page, // vai pular ate a pagina
+      take: perPage, // vai mostrar o tanto de posts que foi passado para perPage
       orderBy: {
         created_at: "desc",
       },

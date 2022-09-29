@@ -52,6 +52,14 @@ class GetFeed {
         dataFeedUser.map(async (data) => {
           let body: string;
 
+          const comment = data.post_comment.map(comment => {
+            return {
+              id: comment.id,
+              body: comment.body,
+              created_at: comment.created_at,
+            }
+          })
+
           if (data.type === "text") {
             body = data.body;
           } else {
@@ -68,7 +76,7 @@ class GetFeed {
             like_cont: data.like_cont,
             liked,
             created_at: data.created_at,
-            comment: data.post_comment
+            comment
           });
         });
       }

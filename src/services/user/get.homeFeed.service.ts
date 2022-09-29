@@ -34,6 +34,18 @@ class GetHomeFeedService {
       postList.forEach(async (dataPost) => {
         let liked = await LikeRepository.postLike(dataPost.id, id_user);
 
+        const comment = dataPost.post_comment.map(comment => {
+          return {
+            id: comment.id,
+            body: comment.body,
+            created_at: new Date(comment.created_at),
+            user: {
+              avatar: `${process.env.BASE_URL}/media/avatars/${comment.user?.avatar}`,
+              name: comment.user?.name,
+            }
+          }
+        })
+
         post.push({
           id: dataPost.id,
           type: dataPost.type,
@@ -42,7 +54,7 @@ class GetHomeFeedService {
           like_cont: dataPost.like_cont,
           liked,
           mine: dataPost.user_id === id_user ?? false,
-          comment: dataPost.post_comment,
+          comment,
           user: {
             id: dataPost.user?.id,
             name: dataPost.user?.name,
